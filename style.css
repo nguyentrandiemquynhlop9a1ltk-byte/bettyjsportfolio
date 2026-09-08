@@ -1,0 +1,3323 @@
+@font-face {
+  font-family: "Vladimir";
+  src: url("assets/fonts/VLADIMIR.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Stencil";
+  src: url("assets/fonts/STENCIL.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root { 
+  /* ========================================================================== 
+     1. COLOR PALETTE & STATES 
+     ========================================================================== */ 
+ 
+  --color-primary-base: #A793FF; 
+ 
+  --color-secondary-base: #8FE8C9; 
+  --color-secondary-hover: #8FE8C9; 
+ 
+  --color-accent-base: #FF0000; 
+ 
+  /* Surfaces & Backgrounds */ 
+  --bg-app: #000000; 
+  --bg-DECCOR: #FF00FF;      
+ 
+  /* Text & Content */ 
+  --text-primary: #A793FF;     
+  --text-secondary: #8FE8C9;   
+ 
+  /* Borders & UI Lines */ 
+  --border-subtle: rgba(143, 232, 201, 0.5); 
+ 
+ 
+  /* ========================================================================== 
+     2. SPACING SCALE (8pt Grid System) 
+     ========================================================================== */ 
+ 
+  --space-1: 0.25rem; /* 4px */ 
+  --space-2: 0.5rem;  /* 8px */ 
+  --space-3: 0.75rem; /* 12px */ 
+  --space-4: 1rem;    /* 16px */ 
+  --space-6: 1.5rem;  /* 24px */ 
+  --space-8: 2rem;    /* 32px */ 
+  --space-12: 3rem;   /* 48px */ 
+  --space-16: 4rem;   /* 64px */ 
+ 
+ 
+  /* ========================================================================== 
+     3. TYPOGRAPHY 
+     ========================================================================== */ 
+ 
+  --font-family-stencil: "STENCIL", sans-serif; 
+  --font-family-script: "Vladimir Script", cursive; 
+ 
+  /* Font Sizes */ 
+  --text-xs: 0.75rem;   /* 12px */ 
+  --text-sm: 0.875rem;  /* 14px */ 
+  --text-base: 1rem;    /* 16px */ 
+  --text-lg: 1.125rem;  /* 18px */ 
+  --text-xl: 1.25rem;   /* 20px */ 
+  --text-2xl: 1.5rem;   /* 24px */ 
+  --text-3xl: 2rem;     /* 32px */ 
+  --text-4xl: 2.5rem;   /* 40px */ 
+ 
+  /* Line Heights */ 
+  --line-height-heading: 1.2; 
+  --line-height-body: 1.6; 
+ 
+ 
+  /* ========================================================================== 
+     4. Z-INDEX LAYERING 
+     ========================================================================== */ 
+ 
+  --z-background: -10; 
+  --z-3d-canvas: 1; 
+  --z-content: 10; 
+  --z-header: 100; 
+  --z-modal: 1000; 
+ 
+ 
+  /* ========================================================================== 
+     5. CONTAINERS & COMPONENT SIZES 
+     ========================================================================== */ 
+ 
+  --container-max-width: 1200px; 
+  --container-narrow-width: 800px; 
+ 
+  --navbar-height: 80px; 
+ 
+  --radius-sm: 0.25rem; /* 4px */ 
+  --radius-md: 0.5rem;  /* 8px */ 
+  --radius-lg: 1rem;    /* 16px */ 
+  --radius-full: 9999px; 
+ 
+ 
+  /* ========================================================================== 
+     6. TRANSITIONS & SHADOWS 
+     ========================================================================== */ 
+ 
+  --transition-fast: 150ms ease-in-out; 
+  --transition-normal: 250ms ease-in-out; 
+ 
+  --shadow-navbar: 0 0 0.25rem #FF00FF; 
+  --shadow-sm: 0 1px 0.25rem 0 #FF00FF; 
+  --shadow-md: 0 0 0.5rem 0 #FF00FF; 
+  --shadow-lg: 0 0 1rem 0 #FF00FF; 
+} 
+
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+} 
+
+
+html { 
+  scroll-behavior: smooth; 
+  scrollbar-gutter: stable;
+} 
+
+
+body { 
+  min-height: 100vh; 
+
+  background: var(--bg-app); 
+
+  color: white; 
+
+  overflow-x: hidden; 
+} 
+
+
+.space-background { 
+  position: fixed; 
+  inset: 0; 
+  z-index: -2; 
+  pointer-events: none; 
+
+  background: 
+    radial-gradient( 
+      ellipse at center, 
+      #080008 0%, 
+      #050005 30%, 
+      #020002 65%, 
+      #000000 100% 
+    ); 
+} 
+
+
+#starfield { 
+  position: fixed; 
+  inset: 0; 
+  width: 100%; 
+  height: 100%; 
+  z-index: -1; 
+  pointer-events: none;  
+} 
+
+/* =========================================================
+   HOME PAGE STARFIELD COLOR DODGE BLEND MODE
+   ========================================================= */
+
+.home-page #starfield,
+.home-frame #starfield {
+  mix-blend-mode: color-dodge;
+}
+
+
+
+/* =========================================================
+   NAVBAR (DESKTOP) - TĂNG CHIỀU RỘNG, GIẢM MARGIN 2 BÊN
+   ========================================================= */
+.navbar { 
+  /* Tăng từ calc(100% - 80px) thành calc(100% - 40px) */
+  width: calc(100% - 60px); 
+  
+  /* Tăng giới hạn chiều rộng tối đa từ 1400px lên 1800px */
+  max-width: 1700px; 
+
+  height: var(--space-8); 
+  position: fixed; 
+  top: 32px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: var(--z-header); 
+  display: grid; 
+  grid-template-columns: 1fr 0.2fr 1fr 0.2fr 1fr; 
+  align-items: center; 
+  text-align: center; 
+  background: rgba(255, 0, 255, 0.07); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px); 
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25); 
+  border: 1.5px dashed var(--border-subtle); 
+  border-radius: 50px; 
+} 
+
+
+.nav-link { 
+  color: var(--text-secondary); 
+ 
+  text-decoration: none; 
+ 
+  font-family: var(--font-family-stencil); 
+ 
+  font-size: var(--space-4); 
+ 
+  line-height: 1; 
+ 
+  white-space: nowrap; 
+ 
+  transition: 
+    color 0.25s ease, 
+    text-shadow 0.25s ease, 
+    transform 0.25s ease; 
+} 
+
+
+.nav-logo {
+  appearance: none;
+  -webkit-appearance: none;
+
+  color: var(--color-primary-base);
+
+  text-decoration: none;
+
+  font-family: var(--font-family-script);
+
+  font-size: var(--space-6);
+
+  white-space: nowrap;
+
+  background: transparent;
+  border: none;
+
+  padding: 0;
+  margin: 0;
+
+  outline: none;
+
+
+  transform: translateY(-3px);
+
+  text-shadow:var(--shadow-navbar);
+
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  
+}
+
+
+.nav-link:hover { 
+  color: var(--bg-DECCOR); 
+ 
+  text-shadow: 
+    0 0 8px 
+    rgba( 
+      255, 
+      0, 
+      255, 
+      0.7 
+    ); 
+ 
+  transform: 
+    translateY(-1px); 
+}
+
+
+.home-page {
+
+  height: 100vh;
+
+  overflow: hidden;
+}
+
+
+.hero {
+
+  height: 100vh;
+
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  position: relative;
+
+  overflow: hidden;
+
+  padding-top: 80px;
+}
+
+
+.hero-content {
+
+  position: relative;
+
+  z-index: 2;
+
+  text-align: center;
+}
+
+
+.hero-eyebrow {
+
+  font-size:
+    clamp(
+      0.7rem,
+      1.5vw,
+      1.2rem
+    );
+
+  letter-spacing:
+    0.3em;
+
+  margin-bottom: 15px;
+}
+
+
+.hero-content h1 {
+
+  font-size:
+    clamp(
+      4rem,
+      12vw,
+      12rem
+    );
+
+  line-height: 0.9;
+}
+
+
+.hero-subtitle {
+
+  font-size:
+    clamp(
+      0.8rem,
+      1.5vw,
+      1.2rem
+    );
+
+  letter-spacing:
+    0.15em;
+
+  margin-top: 15px;
+}
+
+
+/* =========================================================
+   ALL INNER PAGES
+   ========================================================= */
+
+.page-content {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: min(
+    1200px,
+    84%
+  );
+
+  margin: 0 auto;
+
+  padding:
+    150px 0 120px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+
+  margin-bottom: 120px;
+}
+
+
+.section-label {
+
+  color: #8FE8C9;
+
+  font-size: 13px;
+
+  letter-spacing:
+    0.18em;
+
+  margin-bottom: 15px;
+}
+
+
+.page-header h1 {
+
+  font-size:
+    clamp(
+      3rem,
+      9vw,
+      9rem
+    );
+
+  line-height: 0.9;
+}
+
+
+/* =========================================================
+   ABOUT
+   ========================================================= */
+
+.about-intro {
+
+  min-height: 60vh;
+
+  display: flex;
+
+  align-items: center;
+}
+
+
+.text-block {
+
+  max-width: 750px;
+}
+
+
+.text-block h2 {
+
+  font-size:
+    clamp(
+      2rem,
+      5vw,
+      5rem
+    );
+
+  margin-bottom: 30px;
+}
+
+
+.text-block p {
+
+  font-size:
+    clamp(
+      1rem,
+      1.6vw,
+      1.3rem
+    );
+
+  line-height: 1.8;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.75
+    );
+}
+
+
+.about-section {
+
+  padding:
+    120px 0;
+}
+
+
+.section-title {
+
+  margin-bottom: 60px;
+}
+
+
+.section-title h2 {
+
+  font-size:
+    clamp(
+      2rem,
+      6vw,
+      6rem
+    );
+
+  line-height: 1;
+}
+
+
+.info-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      1fr
+    );
+
+  gap: 20px;
+}
+
+
+.info-card {
+
+  min-height: 250px;
+
+  padding: 35px;
+
+
+  background:
+    rgba(
+      255,
+      0,
+      255,
+      0.05
+    );
+
+
+  border:
+    1px solid
+    rgba(
+      143,
+      232,
+      201,
+      0.25
+    );
+
+
+  border-radius: 20px;
+
+
+  backdrop-filter:
+    blur(12px);
+
+  -webkit-backdrop-filter:
+    blur(12px);
+}
+
+
+.info-card h3 {
+
+  color: #8FE8C9;
+
+  margin-bottom: 25px;
+}
+
+
+.info-card p {
+
+  line-height: 1.7;
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.7
+    );
+}
+
+
+/* =========================================================
+   GALLERY
+   ========================================================= */
+
+.gallery-section {
+
+  padding:
+    100px 0;
+}
+
+
+.gallery-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      1fr
+    );
+
+  gap: 30px;
+}
+
+
+.project-card {
+
+  position: relative;
+}
+
+
+.project-image {
+
+  width: 100%;
+
+  aspect-ratio:
+    4 / 3;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+
+  background:
+    rgba(
+      255,
+      0,
+      255,
+      0.06
+    );
+
+
+  border:
+    1px solid
+    rgba(
+      143,
+      232,
+      201,
+      0.25
+    );
+}
+
+
+.project-image img {
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  transition:
+    transform 0.5s ease;
+}
+
+
+.project-card:hover
+.project-image img {
+
+  transform:
+    scale(1.04);
+}
+
+
+.project-info {
+
+  padding:
+    20px 5px;
+}
+
+
+.project-number {
+
+  color: #FF00FF;
+
+  font-size: 13px;
+
+  margin-bottom: 8px;
+}
+
+
+.project-info h3 {
+
+  margin-bottom: 8px;
+}
+
+
+.project-info p {
+
+  color:
+    rgba(
+      255,
+      255,
+      255,
+      0.6
+    );
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   CONTACT
+   ========================================================= */
+
+.contact-page {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: min(
+    1200px,
+    84%
+  );
+
+  margin: 0 auto;
+
+  padding:
+    150px 0 120px;
+}
+
+
+.contact-intro {
+
+  min-height: 50vh;
+
+  display: flex;
+
+  align-items: center;
+}
+
+
+.contact-big-text {
+
+  max-width: 900px;
+
+  font-size:
+    clamp(
+      3rem,
+      8vw,
+      8rem
+    );
+
+  line-height: 0.95;
+}
+
+
+.contact-big-text span {
+
+  color: #FF00FF;
+
+  font-style: italic;
+}
+
+
+.contact-links {
+
+  border-top:
+    1px solid
+    rgba(
+      143,
+      232,
+      201,
+      0.3
+    );
+}
+
+
+.contact-link {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 30px;
+
+  padding:
+    25px 5px;
+
+  border-bottom:
+    1px solid
+    rgba(
+      143,
+      232,
+      201,
+      0.3
+    );
+
+  color: white;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    padding 0.25s ease;
+}
+
+
+.contact-link:hover {
+
+  color: #FF00FF;
+
+  padding-left: 15px;
+
+  padding-right: 15px;
+}
+
+
+  @media (max-width: 800px) {
+
+  .navbar {
+    width: calc(100% - 75px);
+    height: 38px;
+
+    grid-template-columns:
+      0.8fr
+      1fr
+      0.8fr
+      1fr
+      0.8fr;
+  }
+
+}
+
+/* =========================================================
+   MOBILE
+   =========================================================
+
+@media (max-width: 500px) {
+
+
+  .navbar {
+
+    width:
+      calc(
+        100% - 20px
+      );
+
+    grid-template-columns:
+      1fr
+      1fr
+      0.8fr
+      1fr
+      1fr;
+  }
+
+
+  .nav-link{
+    font-size: var(--space-3);
+  }
+  .nav-logo {
+    font-size: var(--space-6);
+  }
+
+
+  .hero {
+
+    padding-top: 60px;
+  }
+
+
+  .page-header {
+
+    margin-bottom: 70px;
+  }
+
+
+  .about-section,
+  .gallery-section {
+
+    padding:
+      70px 0;
+  }
+
+
+  .info-card {
+
+    min-height: auto;
+
+    padding: 25px;
+  }
+
+
+  .contact-link {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 8px;
+  }
+
+} */
+
+@media (max-width: 600px) {
+
+  .home-frame {
+    top: 72px;
+
+    left: 50%;
+
+    width: 84%;
+
+    bottom: 40px;
+
+    height: auto;
+
+    transform: translateX(-50%);
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .navbar {
+    position: fixed;
+
+    top: var(--space-8);
+    left: max(20px, 8vw);
+
+    width: auto;
+    height: auto;
+
+    transform: translateY(-10px);
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    padding: 0;
+
+    background: transparent;
+
+    border: none;
+    border-radius: 0;
+
+    box-shadow: none;
+
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    text-align: left;
+  }
+
+
+  /* =========================
+     LOGO
+     ========================= */
+
+  .nav-logo {
+    order: -1;
+
+    display: block;
+
+    padding: 0;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: var(--color-primary-base);
+
+    font-family: var(--font-family-script);
+
+    font-size: 24px;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transform: translateY(-2px);
+
+    text-shadow:
+      var(--shadow-navbar);
+
+      cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  }
+
+
+  /* =========================================================
+     OPEN GLASS PANEL
+     Only changes when menu is opened
+     ========================================================= */
+
+  .navbar.open {
+
+    width: 25vw;
+
+    max-width: 200px;
+    min-width: 130px;
+
+    padding: 14px 18px 18px 18px;
+
+    background: rgba(255, 0, 255, 0.07);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 2px dashed var(--border-subtle);
+
+    border-radius: 24px;
+
+    box-shadow:
+      0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+  }
+
+
+  /* =========================
+     NAV LINKS
+     CLOSED
+     ========================= */
+
+  .nav-link {
+
+    display: none;
+
+    padding: 0;
+
+    margin: 0;
+
+    font-size: 12px;
+
+    text-align: left;
+  }
+
+
+  /* =========================
+     NAV LINKS
+     OPEN
+     ========================= */
+
+  .navbar.open .nav-link {
+
+    display: block;
+
+    margin-top: 10px;
+
+  }
+
+}
+
+/* =========================================================
+   HOME FRAME (DESKTOP) - TĂNG CHIỀU RỘNG, GIẢM MARGIN 2 BÊN
+   ========================================================= */
+.home-frame {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Tăng từ calc(100% - 80px) thành calc(100% - 40px) */
+  width: calc(100% - 60px);
+
+  /* Tăng giới hạn chiều rộng tối đa từ 1400px lên 1800px */
+  max-width: 1700px;
+
+  height: calc(100vh - 118px);
+  z-index: 1;
+  pointer-events: none;
+  border: 1.5px dashed var(--border-subtle);
+  overflow: hidden;
+}
+
+.typo-bg-pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-position: top left;
+}
+
+/* =========================================================
+   HERO BAG FLOATING OBJECT (CÂN CHỈNH KÍCH THƯỚC CHUẨN)
+   ========================================================= */
+
+.hero-bag-wrapper {
+  position: absolute;
+  /* Desktop: Đặt gốc ở trung tâm và dời nhẹ xuống dưới */
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -45%);
+  
+  /* Đặt chiều cao trực tiếp thay vì phụ thuộc vào width để loại bỏ khoảng trống thừa 2 bên */
+  height: 60%; 
+  width: auto;
+  aspect-ratio: 16 / 9;
+  
+  z-index: 10;
+  pointer-events: none;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-bag-img {
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  
+  /* Xóa scale, chỉ giữ góc xoay 90deg */
+  transform: rotate(90deg);
+  transform-origin: center center;
+  transition: transform 0.3s ease;
+}
+
+/* =========================================================
+   RESPONSIVE (TABLET & MOBILE)
+   ========================================================= */
+
+@media (max-width: 800px) {
+  .hero-bag-wrapper {
+    top: 49%;
+    height: 75%;
+    max-width: 90%;
+  }
+  
+  .hero-bag-img {
+    /* Scale nhẹ cho Tablet */
+    transform: scale(0.9) rotate(90deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-bag-wrapper {
+    top: auto;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    height: 60%;
+    width: 80%;
+  }
+
+  .hero-bag-img {
+    /* Thu nhỏ thêm cho Mobile để vừa khung */
+    transform: scale(0.7) rotate(90deg);
+  }
+}
+/* =========================================================
+   SCIENTIFIC RULER (100% PERFECT CENTER ORIGIN)
+   ========================================================= */
+
+:root {
+  --ruler-color: rgba(143, 232, 201, 0.7);
+}
+
+/* ---------------------------------------------------------
+   1. THƯỚC NGANG (HORIZONTAL RULER)
+   --------------------------------------------------------- */
+.ruler-horizontal {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 17px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 100;
+  /* Trục chính 1px ở giữa */
+  background: linear-gradient(to bottom, transparent calc(50% - 0.5px), var(--ruler-color) calc(50% - 0.5px), var(--ruler-color) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+/* Nửa Bên Phải (Xuất phát từ Tâm -> Chạy sang Phải) */
+.ruler-horizontal::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(90deg, var(--ruler-color) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(90deg, var(--ruler-color) 0 1px, transparent 1px 40px);
+  background-size: 100% 8px, 100% 16px;
+  background-position: left center, left center;
+  background-repeat: no-repeat;
+}
+
+/* Nửa Bên Trái (Xuất phát từ Tâm -> Chạy sang Trái) */
+.ruler-horizontal::before {
+  content: "";
+  position: absolute;
+  right: 50%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(-90deg, var(--ruler-color) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(-90deg, var(--ruler-color) 0 1px, transparent 1px 40px);
+  background-size: 100% 8px, 100% 16px;
+  background-position: right center, right center;
+  background-repeat: no-repeat;
+}
+
+
+/* ---------------------------------------------------------
+   2. THƯỚC DỌC (VERTICAL RULER)
+   --------------------------------------------------------- */
+.ruler-vertical {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 17px;
+  height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 100;
+  /* Trục chính 1px ở giữa */
+  background: linear-gradient(to right, transparent calc(50% - 0.5px), var(--ruler-color) calc(50% - 0.5px), var(--ruler-color) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+}
+
+/* Nửa Phía Dưới (Xuất phát từ Tâm -> Chạy xuống Dưới) */
+.ruler-vertical::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-image: 
+    repeating-linear-gradient(180deg, var(--ruler-color) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(180deg, var(--ruler-color) 0 1px, transparent 1px 40px);
+  background-size: 8px 100%, 16px 100%;
+  background-position: center top, center top;
+  background-repeat: no-repeat;
+}
+
+/* Nửa Phía Trên (Xuất phát từ Tâm -> Chạy lên Trên) */
+.ruler-vertical::before {
+  content: "";
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-image: 
+    repeating-linear-gradient(0deg, var(--ruler-color) 0 1px, transparent 1px 20px),
+    repeating-linear-gradient(0deg, var(--ruler-color) 0 1px, transparent 1px 40px);
+  background-size: 8px 100%, 16px 100%;
+  background-position: center bottom, center bottom;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 600px) {
+  .ruler-horizontal,
+  .ruler-vertical {
+    opacity: 0.5;
+  }
+}
+
+/* =========================================================
+   FLOATING SCRIPT TEXTS (BETTYJ'S & PORTFOLIO)
+   ========================================================= */
+
+.floating-script-text {
+  position: absolute;
+  color: var(--1-text, #A793FF);
+  text-shadow: 0 0 20px #F0F;
+  font-family: "Vladimir Script", cursive, sans-serif;
+  
+  /* Co giãn font thông minh từ desktop (128px) xuống mobile */
+  font-size: clamp(52px, 9.5vw, 140px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  white-space: nowrap;
+  
+  z-index: 3; /* Nằm trên ruler nhưng dưới túi */
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Chữ "bettyj's" ở 1/4 Rộng (25%) và 1/4 Cao (25%) */
+.text-bettyj {
+  left: 24%;
+  top: 15%;
+  transform: translate(-50%, -50%);
+}
+
+/* Chữ "portfolio" ở 3/4 Rộng (75%) và 3/4 Cao (75%) */
+.text-portfolio {
+  left: 76%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+}
+
+/* Điều chỉnh vị trí nhẹ cho màn hình nhỏ */
+@media (max-width: 600px) {
+  .text-bettyj {
+    left: 24%;
+    top: 15%;
+  }
+  
+  .text-portfolio {
+    left: 76%;
+    top: 20%;
+  }
+}
+
+/* =========================================================
+   1. KHÓA CUỘN VÀ ĐỊNH DẠNG KHUNG TRANG ABOUT
+   ========================================================= */
+body.about-page-body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden; /* Không cho cuộn trang */
+}
+
+/* Container chính ăn sát đỉnh màn hình */
+.about-page-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Dính sát mép trên */
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Container chứa khay phủ kín khung ảnh nền */
+.about-image-wrapper {
+  position: relative !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* =========================================================
+   2. KHUNG ẢNH NỀN PRINCIPAL (RESPONSIVE)
+   ========================================================= */
+/* Desktop (> 800px): Cố định 60vw */
+.about-image {
+  width: 60vw !important;
+  max-width: 60vw !important;
+  height: auto !important;
+  display: block;
+  margin-top: 0 !important;
+}
+
+/* Tablet (481px - 800px) */
+@media (max-width: 800px) and (min-width: 481px) {
+  .about-image {
+    width: 80vw !important;
+    max-width: 80vw !important;
+  }
+}
+
+/* Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .about-page-content {
+    height: 100vh !important;
+    height: 100dvh !important;
+  }
+
+  .about-image-wrapper {
+    height: 100% !important;
+    padding-left: var(--page-margin, 16px);
+    padding-right: var(--page-margin, 16px);
+    box-sizing: border-box;
+  }
+
+  .about-image {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    object-fit: fill !important;
+    object-position: top center !important;
+  }
+}
+
+/* =========================================================
+   3. KHAY & BĂNG CHUYỀN CONVEYOR
+   ========================================================= */
+.khay-conveyor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Wrapper bọc chung ảnh khay và cụm chữ */
+.khay-wrapper {
+  position: absolute;
+  left: 50%;
+  display: flex !important;
+  flex-direction: column-reverse !important; /* Đẩy chữ lên TRÊN, Khay ở DƯỚI */
+  align-items: center !important;
+  will-change: transform;
+}
+
+/* Ép ảnh khay trả về chuẩn width do JS tính toán, không bị co nhỏ */
+.khay-wrapper .khay-item {
+  position: relative !important;
+  left: 0 !important;
+  transform: none !important;
+  width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  max-width: none !important;
+}
+
+/* Group chứa 2 dòng chữ (Xếp theo thứ tự chuẩn từ trên xuống dưới) */
+.khay-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* =========================================================
+   1. CSS CHUNG CHO TẤT CẢ DÒNG CHỮ (CHÍNH & PHỤ)
+   ========================================================= */
+.khay-text,
+.khay-text-t {
+  font-family: var(--font-family-stencil, sans-serif);
+  color: var(--color-secondary-base);
+  text-shadow: var(--shadow-sm, 0 0 3rem 0 #FF00FF);
+  text-align: center;
+  opacity: 0;
+  
+  /* Đặt vị trí ban đầu ở DƯỚI (20px) để trượt lên */
+  transform: translateY(20px); 
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+}
+
+/* Dòng chữ chính: Giữ nguyên 1 dòng */
+.khay-text {
+  white-space: nowrap;
+}
+
+/* Dòng chữ phụ: Ép rộng đúng 90% chiều rộng của ảnh nền */
+.khay-text-t {
+  display: block !important;
+  position: relative !important;
+  white-space: normal !important;
+  font-size: clamp(0.85rem, 1.8vw, 1.25rem) !important;
+  margin-top: 10px !important; 
+
+  /* --- THÊM CÁC DÒNG DƯỚI ĐÂY --- */
+  width: 70% !important;           /* Ép chiều rộng bằng 90% khung ảnh */
+  max-width: 70% !important;       /* Giới hạn không vượt quá 90% */
+  margin-left: auto !important;    /* Căn giữa khối chữ */
+  margin-right: auto !important;   /* Căn giữa khối chữ */
+  box-sizing: border-box !important;
+}
+
+/* Bật hiển thị cho CẢ XUẤT HIỆN CHÍNH & PHỤ */
+.khay-text.show {
+  opacity: 1;
+  transform: translateY(0); /* Trượt từ dưới (20px) LÊN (0px) */
+  filter: drop-shadow(0px 0px 6px rgb(255, 0, 255)); 
+}
+
+.khay-text-t.show {
+  opacity: 1;
+  transform: translateY(0); /* Trượt từ dưới (20px) LÊN (0px) */
+  filter: drop-shadow(0px 1px 2px rgb(255, 0, 255)); 
+}
+
+/* =========================================================
+   2. TÙY CHỈNH CHỮ CHO TỪNG KHAY RIÊNG BIỆT
+   ========================================================= */
+
+/* --- KHAY TEXT GROUP SPACING --- */
+.khay-1-wrapper .khay-text-group {
+  margin-bottom: -2rem; 
+}
+
+/* Apply consistent title styling and spacing across all khays */
+.khay-1-wrapper .khay-text,
+.khay-2-wrapper .khay-text,
+.khay-3-wrapper .khay-text {
+  color: var(--text-primary);
+  text-shadow: var(--shadow-lg);
+  font-size: clamp(1rem, 3.5vw, 3rem) !important;
+  margin-bottom: var(--space-3) !important; /* Uniform gap between title & subtext */
+}
+
+/* =========================================================
+   3. 3 CHẤM INDICATOR
+   ========================================================= */
+.dots-indicator {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dot-item {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background: transparent;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.dot-item.active {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+/* =========================================================
+   GALLERY PAGE — FIXED HORIZONTAL GALLERY
+   ========================================================= */
+
+.gallery-page {
+  height: 100vh;
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   GALLERY PAGE — FULL SCREEN HORIZONTAL GALLERY
+   ========================================================= */
+
+.gallery-page {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   GALLERY CONTENT
+   ========================================================= */
+
+.gallery-page-content {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  z-index: 2;
+
+  overflow: hidden;
+
+  padding: 0;
+}
+
+
+/* =========================================================
+   TITLE
+   ========================================================= */
+
+.gallery-title {
+  position: absolute;
+
+  left: 8vw;
+  top: 145px;
+
+  z-index: 10;
+
+  pointer-events: none;
+}
+
+.gallery-title h1 {
+  font-size: clamp(3rem, 9vw, 9rem);
+
+  line-height: 0.9;
+}
+
+
+/* =========================================================
+   GALLERY VIEWPORT
+   ========================================================= */
+
+
+.gallery-viewport {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 49.5%;
+  width: 100vw;
+  
+  /* 💡 CHỈNH CHIỀU CAO KHUNG TẠI ĐÂY (Ví dụ: 60vh, 500px,...) */
+  height: 60vh; 
+
+  transform: translateY(-50%);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* =========================================================
+   HORIZONTAL STRIP
+   ========================================================= */
+
+.gallery-strip {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: max-content;
+  height: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.25rem;
+
+  will-change: transform;
+
+  transform: translate3d(0, 0, 0);
+}
+
+
+/* =========================================================
+   GALLERY ITEMS
+   ========================================================= */
+
+
+/* 2. Đổi chiều cao của Từng tấm hình cho KHỚP với Viewport */
+.gallery-item {
+  flex: 0 0 auto;
+  
+  /* 💡 PHẢI BẰNG HOẶC NHỎ HƠN CHIỀU CAO CỦA VIEWPORT */
+  height: 60vh; 
+
+  margin: 0;
+}
+
+
+/* =========================================================
+   IMAGES
+   ========================================================= */
+
+.gallery-item img {
+  display: block;
+
+  height: 100%;
+  width: auto;
+
+  max-width: none;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 601px) {
+
+  .gallery-viewport {
+    cursor: ew-resize;
+
+    /*
+      Prevent browser overscroll behavior
+      from interfering with the gallery.
+    */
+    overscroll-behavior: none;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+  .gallery-page {
+    height: 100dvh;
+    min-height: 100dvh;
+
+    overflow: hidden;
+  }
+
+
+  .gallery-page-content {
+    height: 100dvh;
+
+    overflow: hidden;
+  }
+
+
+  /* -----------------------------------------
+     TITLE
+     ----------------------------------------- */
+
+  .gallery-title {
+    left: 8vw;
+
+    top: 110px;
+  }
+
+
+  /* -----------------------------------------
+     VIEWPORT
+     ----------------------------------------- */
+
+  .gallery-viewport {
+
+    top: 50%;
+
+    width: 100vw;
+    height: 50vh;
+
+    transform: translateY(-50%);
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+
+    scrollbar-width: none;
+
+    overscroll-behavior-x: contain;
+
+    cursor: grab;
+  }
+
+
+  .gallery-viewport:active {
+    cursor: grabbing;
+  }
+
+
+  .gallery-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  /* -----------------------------------------
+     STRIP
+     ----------------------------------------- */
+
+  .gallery-strip {
+
+    position: relative;
+
+    left: auto;
+    top: auto;
+
+    width: max-content;
+    height: 100%;
+
+    gap: 0.25rem;
+
+    transform: none !important;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    will-change: auto;
+  }
+
+
+  /* -----------------------------------------
+     ITEMS
+     ----------------------------------------- */
+
+  .gallery-item {
+
+    height: 16vh;
+
+    flex: 0 0 auto;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .gallery-title {
+    top: 100px;
+  }
+
+  .gallery-viewport {
+    height: 48vh;
+  }
+
+  .gallery-item {
+    height: 48vh;
+  }
+
+}
+
+/* =========================================================
+   GALLERY CAPTION
+   ========================================================= */
+
+.gallery-caption {
+  position: absolute;
+
+  left: 50%;
+  bottom: 10vh;
+
+  transform: translateX(-50%);
+
+  width: max-content;
+  max-width: 84vw;
+
+  font-family: "Stencil", sans-serif;
+
+  font-size: clamp(
+    1.5rem,
+    3vw,
+    3rem
+  );
+
+  line-height: 1;
+
+  color: var(--color-primary-base);
+
+  text-align: center;
+  text-transform: uppercase;
+
+  letter-spacing: 0.08em;
+
+  white-space: nowrap;
+
+  z-index: 10;
+
+  pointer-events: none;
+
+  text-shadow:
+    0 0 10px rgb(255, 0, 255);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .gallery-caption {
+
+    bottom: 17vh;
+
+    max-width: 80vw;
+
+    font-size: clamp(
+      1.3rem,
+      4vw,
+      2.2rem
+    );
+
+    letter-spacing: 0.06em;
+
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .gallery-caption {
+
+    bottom: 30vh;
+
+    max-width: 78vw;
+
+    font-size: clamp(
+      1rem,
+      5vw,
+      1.7rem
+    );
+
+    letter-spacing: 0.04em;
+
+    white-space: normal;
+
+    line-height: 1.1;
+
+  }
+
+}
+
+.gallery-item a {
+  display: block;
+  height: 100%;
+  width: auto;
+  text-decoration: none;
+}
+
+/* =========================================================
+   PROJECT INFO SECTION (ATTACHED IMAGE STYLE)
+   ========================================================= */
+
+.project-info-section {
+  width: 100%;
+  height: auto;
+  margin-top: 3rem;
+  font-family: var(--font-family-stencil, "Stencil", sans-serif);
+  color: var(--color-secondary-base, #80ffff);
+  text-shadow: 0 0 10px rgba(128, 255, 255, 0.4);
+  box-sizing: border-box;
+}
+
+/* Tiêu đề mục (màu hồng) */
+.info-heading, h1 {
+  font-family: var(--font-family-stencil, "Stencil", sans-serif);
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  color: var(--color-primary-base, #ff00ff);
+  text-shadow: 0 0 12px rgba(255, 0, 255, 0.8);
+  margin: 0 0 0.8rem 0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.project-subtitle {
+  font-family: var(--font-family-stencil, "Stencil", sans-serif);
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  color: var(--color-primary-base, #ff00ff);
+  text-shadow: 0 0 12px rgba(255, 0, 255, 0.8);
+  margin: 0 0 0.8rem 0;
+  letter-spacing: 0.05em;
+  text-align: center;
+  transform: translateY(-5px);
+}
+
+/* Grid 3 cột cho Categories, Role, Tools */
+.project-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.info-content {
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Danh sách Tools */
+.info-list {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.info-list li::marker {
+  color: var(--color-secondary-base, #80ffff);
+}
+
+/* Khối thông tin chi tiết (INFO) */
+.project-description-block {
+  width: 100%;
+}
+
+.description-text p {
+  font-size: clamp(0.95rem, 1.4vw, 1.25rem);
+  line-height: 1.35;
+  margin: 0 0 1.2rem 0;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+/* Link ArtStation có đường gạch chân */
+.artstation-link {
+  color: var(--color-secondary-base, #80ffff);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s ease, text-shadow 0.2s ease;
+}
+
+.artstation-link:hover {
+  opacity: 0.8;
+  text-shadow: 0 0 12px rgba(128, 255, 255, 0.8);
+}
+
+/* RESPONSIVE CHO MÀN HÌNH NHỎ */
+@media (max-width: 768px) {
+  .project-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+}
+
+/* Container chính thu gọn vừa màn hình */
+.project-detail-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  padding: 100px 2rem 60px 2rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Khung chứa ảnh: Tự co giãn để hiển thị FULL ảnh trong màn hình */
+.project-media-container {
+  width: auto;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.project-hero-image {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.project-hero-image img {
+  /* Giới hạn chiều cao và chiều rộng để luôn thấy trọn vẹn 100% hình */
+  max-width: 100%;
+  max-height: auto; 
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Khối chữ: Đặt width = 100% của khung hình để mép chữ trùng khớp mép hình */
+.project-info-section {
+  /* Tự động ôm vừa khít chiều rộng của ảnh phía trên */
+  width: min(100%, max-content); 
+  max-width: 100%;
+  margin: 2rem auto 0 auto;
+  font-family: var(--font-family-stencil, "Stencil", sans-serif);
+  color: var(--color-secondary-base, #80ffff);
+  text-shadow: 0 0 10px rgba(128, 255, 255, 0.4);
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   SUB-GALLERY
+   ========================================================= */
+
+:root {
+  --gallery-gap: 1rem;
+}
+
+
+/* =========================================================
+   MAIN GALLERY CONTAINER
+   ========================================================= */
+
+.sub-gallery-container {
+  width: 100%;
+
+  margin-top: 2.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--gallery-gap);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   COMMON
+   ========================================================= */
+
+.sub-gallery-container figure {
+  margin: 0;
+}
+
+.sub-gallery-container img {
+  display: block;
+}
+
+
+/* =========================================================
+   ROW 1
+   IMAGE 1 LEFT
+   IMAGE 2 + 3 RIGHT
+   ========================================================= */
+
+.sub-gallery-top-grid {
+  width: 100%;
+
+  display: flex;
+  align-items: stretch;
+
+  gap: var(--gallery-gap);
+}
+
+
+/* IMAGE 1 */
+
+.item-1 {
+  flex: 1.25 1 0;
+
+  min-width: 0;
+  min-height: 0;
+}
+
+.item-1 img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+/* RIGHT SIDE */
+
+.top-right-stack {
+  flex: 1 1 0;
+
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--gallery-gap);
+}
+
+
+/* IMAGE 2 + IMAGE 3 */
+
+.item-2,
+.item-3 {
+  flex: 1 1 0;
+
+  min-height: 0;
+}
+
+.item-2 img,
+.item-3 img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+/* =========================================================
+   ROW 2–5
+   4 + 5
+   6 + 7
+   8 + 9
+   10 + 11
+   ========================================================= */
+
+.sub-gallery-row {
+  width: 100%;
+
+  display: flex;
+
+  align-items: stretch;
+
+  gap: var(--gallery-gap);
+
+  overflow: visible;
+}
+
+
+/* ITEM */
+
+.sub-gallery-row .sm-item {
+  flex: 0 0 auto;
+
+  margin: 0;
+  padding: 0;
+
+  display: block;
+}
+
+
+/* IMAGE */
+
+.sub-gallery-row .sm-item img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   RESPONSIVE GAP
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  :root {
+    --gallery-gap: 0.8rem;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  :root {
+    --gallery-gap: 0.5rem;
+  }
+
+}
+
+/* =========================================================
+   MOBILE — TYPOGRAPHY + SPACING
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  /* ---------- FONT SIZE ---------- */
+
+  .info-heading,
+  h1 {
+    font-size: 1.15rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .project-subtitle {
+    font-size: 0.8rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .info-content {
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+
+  .info-list {
+    font-size: 0.85rem;
+    line-height: 1.25;
+
+    /* khoảng cách từ heading TOOLS xuống list */
+    margin-top: 0;
+  }
+
+  .description-text p {
+    font-size: 0.8rem;
+    line-height: 1.25;
+
+    /* khoảng cách giữa các đoạn INFO */
+    margin-bottom: 0.7rem;
+  }
+
+
+  /* ---------- KHOẢNG CÁCH GIỮA 3 CỘT ---------- */
+
+  .project-info-grid {
+    gap: 1rem;
+    margin-bottom: 1.3rem;
+  }
+
+
+  /* ---------- INFO ---------- */
+
+  .project-description-block {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  /* ---------- FONT SIZE ---------- */
+
+  .info-heading,
+  h1 {
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .project-subtitle {
+    font-size: 0.7rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .info-content {
+    font-size: 0.75rem;
+    line-height: 1.15;
+  }
+
+  .info-list {
+    font-size: 0.75rem;
+    line-height: 1.15;
+  }
+
+  .description-text p {
+    font-size: 0.7rem;
+    line-height: 1.2;
+
+    /* đoạn văn sát nhau hơn */
+    margin-bottom: 0.55rem;
+  }
+
+
+  /* ---------- KHOẢNG CÁCH GIỮA CÁC BLOCK ---------- */
+
+  .project-info-grid {
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.awake-project-media-container {
+  width: 100%;
+  max-width: 100%;
+
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.awake-project-hero-image {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+
+  display: block;
+}
+
+.awake-project-hero-image img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 100%;
+
+  object-fit: contain;
+}
+
+/* =========================================================
+   AWAKE — SUB GALLERY
+   SAME FULL WIDTH AS MAIN IMAGE
+   ========================================================= */
+
+.awake-sub-gallery {
+  width: 100%;
+  max-width: 100%;
+
+  margin-top: 2.5rem;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TOP GALLERY
+   ========================================================= */
+
+.awake-sub-gallery-top {
+  width: 100%;
+  max-width: 100%;
+
+  display: flex;
+
+  gap: var(--gallery-gap, 1rem);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   IMAGE 1 — LEFT
+   ========================================================= */
+
+.awake-item-1 {
+  flex: 1.25 1 0;
+
+  min-width: 0;
+
+  margin: 0;
+}
+
+.awake-item-1 img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   RIGHT SIDE
+   ========================================================= */
+
+.awake-top-right-stack {
+  flex: 1 1 0;
+
+  min-width: 0;
+
+  display: flex;
+}
+
+
+/* =========================================================
+   IMAGE 2
+   ========================================================= */
+
+.awake-item-2 {
+  width: 100%;
+
+  margin: 0;
+}
+
+.awake-item-2 img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+}
+
+/* =========================================================
+   AWAKE — FULL WIDTH VERTICAL SUB GALLERY
+   ========================================================= */
+
+.awake-sub-gallery {
+  width: 100%;
+  max-width: 100%;
+
+  margin-top: 2.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: var(--gallery-gap, 1rem);
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   EACH IMAGE
+   ========================================================= */
+
+.awake-sub-gallery-item {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+
+.awake-sub-gallery-item img {
+  display: block;
+
+  width: 100%;
+  height: auto;
+
+  max-width: 100%;
+
+  object-fit: contain;
+}
+
+.icc-project-media-container {
+  width: 100%;
+  height: auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.icc-project-hero-image {
+  height: auto;
+  width: 100%;
+
+  margin: 0;
+
+  display: flex;
+  justify-content: center;
+}
+
+.icc-project-hero-image img {
+  display: block;
+
+  height: auto;
+  width: 100%;
+
+  object-fit: contain;
+}
+
+/* Khung chứa video */
+.so-xau-project-media-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Căn giữa video theo chiều ngang */
+  align-items: center;     /* Căn giữa video theo chiều dọc */
+}
+
+/* Thẻ video bên trong */
+.so-xau-project-media-container video {
+  height: 100vh;  /* Ép chiều cao đúng 100% màn hình */
+  width: auto;    /* Chiều rộng tự động tính theo tỉ lệ gốc của video */
+  max-width: 100%; /* Tránh video bị tràn ra khỏi màn hình nếu màn hình quá hẹp */
+}
+
+/* Khung chứa từng video của project Soxau */
+.soxau-media-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; /* Căn giữa chiều ngang */
+  align-items: center;     /* Căn giữa chiều dọc */
+}
+
+/* Áp dụng 100vh, giữ tỉ lệ gốc và không cắt xén cho video */
+.soxau-media-container img, .soxau-media-container video {
+  height: auto;   /* Chiều cao phủ kín 100% màn hình */
+  width: 100%;     /* Chiều rộng tự động theo tỉ lệ gốc */
+  max-width: 100%; /* Tránh vỡ khung trên màn hình hẹp */
+}
+/* Khung chứa video cho project Cigar Tycoon */
+.cigar-tycoon-media-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* Căn giữa chiều ngang */
+  align-items: center;     /* Căn giữa chiều dọc */
+}
+
+/* Áp dụng 100vh, giữ tỉ lệ gốc và không cắt xén */
+.cigar-tycoon-media-container video {
+  height: 100vh;   /* Chiều cao phủ kín 100% màn hình */
+  width: auto;     /* Chiều rộng tự động theo tỉ lệ gốc */
+  max-width: 100%; /* Tránh vỡ khung trên màn hình hẹp */
+}
+
+@media (max-width: 800px) {
+  .so-xau-project-media-container,
+  .soxau-media-container,
+  .cigar-tycoon-media-container {
+    height: auto;
+    padding: 20px 0;
+  }
+
+  .so-xau-project-media-container video,
+  .so-xau-project-media-container img,
+  .soxau-media-container video,
+  .soxau-media-container img,
+  .cigar-tycoon-media-container video,
+  .cigar-tycoon-media-container img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* --- KHU VỰC ĐIỀU HƯỚNG (BỎ GẠCH NGANG & BỎ KHUNG) --- */
+.project-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 4rem;
+  padding-top: 1rem;
+}
+
+.project-nav-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  background: transparent;
+  border: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.project-nav-btn:hover {
+  opacity: 0.7;
+  transform: translateY(-2px);
+}
+
+.nav-arrow {
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
+}
+
+.prev-btn:hover .nav-arrow {
+  transform: translateX(-4px);
+}
+
+.next-btn:hover .nav-arrow {
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   CONTACT BOARD CONTAINER
+   ========================================================= */
+
+.contact-board-container {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /*
+    Container follows HOME FRAME
+  */
+  width: 100%;
+  height: 85%;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 10;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   TOP HEADER
+   ========================================================= */
+
+.contact-board-header {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  text-align: center;
+
+  margin-bottom: 0.5rem;
+
+  position: relative;
+
+  z-index: 20;
+
+  /*
+    Prevent header from being squeezed by the image
+  */
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   GRADIENT / DECORATIVE AREA BEHIND HEADER
+   ========================================================= */
+
+.contact-board-header::after {
+  content: "";
+
+  position: absolute;
+
+  top: -12vh;
+  left: 0;
+  bottom: -15px;
+
+  width: 100%;
+
+  z-index: -1;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   CONTACT ICON
+   ========================================================= */
+
+.contact-icon {
+  height: clamp(48px, 8vh, 90px);
+
+  width: auto;
+
+  object-fit: contain;
+
+  position: relative;
+
+  /*
+    Slightly lift icon without changing its visual style
+  */
+  top: -25px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   CONTACT TITLE
+   ========================================================= */
+
+.contact-title {
+  font-family: var(--font-family-stencil);
+
+  font-size: clamp(2.4rem, 6vh, 4.4rem);
+
+  font-weight: bold;
+
+  letter-spacing: 0.08em;
+
+  color: var(--color-primary-base);
+
+  text-shadow: 0 0 1rem 0 #FF00FF;
+
+  margin: 0;
+
+  position: relative;
+
+  /*
+    Keep title visually centered with icon
+  */
+  top: -25px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   BOARD IMAGE
+   ========================================================= */
+
+.contact-board-wrapper {
+  width: 100%;
+
+  flex: 1;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  min-height: 0;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  position: relative;
+
+  z-index: 10;
+}
+
+
+.contact-board-img {
+  /*
+    Container = 100% HOME FRAME
+    Therefore image = 95% HOME FRAME
+  */
+  width: 95%;
+
+  height: auto;
+
+  max-height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+  position: relative;
+
+  top: -15px;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   FOOTER GATES
+   ========================================================= */
+
+.contact-board-footer {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 0.5rem;
+
+  position: relative;
+
+  z-index: 100;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   GATE LINK
+   ========================================================= */
+
+.gate-link {
+  font-family: var(--font-family-stencil);
+
+  display: inline-flex;
+
+  flex-direction: column;
+
+  text-decoration: none;
+
+  position: relative;
+
+  z-index: 101;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+
+/* =========================================================
+   LEFT GATE
+   ========================================================= */
+
+.gate-01 {
+  align-items: flex-start;
+  text-align: left;
+
+  text-shadow: 0 0 0.25rem 0 #FF00FF;
+
+  position: absolute;
+  left: 1px;
+}
+
+
+/* =========================================================
+   RIGHT GATE
+   ========================================================= */
+
+.gate-02 {
+  align-items: flex-end;
+  text-align: right;
+
+  text-shadow: 0 0 0.25rem 0 #FF00FF;
+
+  position: absolute;
+  right: 1px;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.gate-link:hover {
+  transform: translateY(-3px) scale(1.02);
+
+  filter:
+    drop-shadow(0 0 8px rgba(114, 224, 190, 0.6));
+}
+
+
+/* =========================================================
+   GATE LABEL
+   ========================================================= */
+
+.gate-label {
+  font-family: var(--font-family-stencil);
+
+  font-size: clamp(0.85rem, 2vh, 1.1rem);
+
+  color: var(--color-primary-base);
+
+  letter-spacing: 0.1em;
+
+  font-weight: bold;
+}
+
+
+/* =========================================================
+   GATE NAME
+   ========================================================= */
+
+.gate-name {
+  font-family: var(--font-family-stencil);
+
+  font-size: clamp(1.1rem, 2.5vh, 1.6rem);
+
+  color: var(--color-secondary-base);
+
+  letter-spacing: 0.08em;
+
+  font-weight: bold;
+}
+
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media screen and (min-width: 801px) {
+
+  .gate-01 {
+    left: 2%;
+  }
+
+  .gate-02 {
+    right: 2%;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET — 800px
+   ========================================================= */
+
+@media screen and (max-width: 800px) {
+
+  .contact-board-container {
+    width: 100%;
+    height: 82%;
+  }
+
+
+  /* ---------- HEADER ---------- */
+
+  .contact-board-header {
+    gap: 10px;
+
+    margin-bottom: 0.25rem;
+
+    justify-content: center;
+  }
+
+  .contact-board-header::after {
+    top: -8vh;
+    bottom: -8px;
+  }
+
+
+  /* ---------- ICON ---------- */
+
+  .contact-icon {
+    height: clamp(32px, 6vh, 60px);
+
+    top: -6px;
+  }
+
+
+  /* ---------- TITLE ---------- */
+
+  .contact-title {
+    font-size: clamp(1.6rem, 4.5vh, 2.8rem);
+
+    top: -6px;
+
+    text-align: center;
+  }
+
+
+  /* ---------- IMAGE ---------- */
+
+  .contact-board-wrapper {
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
+
+  .contact-board-img {
+    width: 95%;
+    height: auto;
+    max-height: 100%;
+  }
+
+
+  /* ---------- GATES ---------- */
+
+  .gate-01 {
+    left: 4%;
+  }
+
+  .gate-02 {
+    right: 4%;
+  }
+
+
+  /* ---------- FOOTER ---------- */
+
+  .gate-label {
+    font-size: clamp(0.75rem, 1.8vh, 0.95rem);
+  }
+
+  .gate-name {
+    font-size: clamp(0.95rem, 2.2vh, 1.3rem);
+  }
+}
+
+
+/* =========================================================
+   MOBILE — 600px
+   ========================================================= */
+
+@media screen and (max-width: 600px) {
+
+  .contact-board-container {
+    width: 100%;
+    height: 78%;
+  }
+
+
+  /* ---------- HEADER ---------- */
+
+  .contact-board-header {
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 0 10px;
+
+    margin-bottom: 0.2rem;
+  }
+
+  .contact-board-header::after {
+    top: -5vh;
+    bottom: -5px;
+  }
+
+
+  /* ---------- ICON ---------- */
+
+  .contact-icon {
+    height: clamp(24px, 5vh, 40px);
+
+    top: -2px;
+  }
+
+
+  /* ---------- TITLE ---------- */
+
+  .contact-title {
+    font-size: clamp(1.1rem, 3.5vh, 1.8rem);
+
+    letter-spacing: 0.04em;
+
+    top: -2px;
+
+    text-align: center;
+  }
+
+
+  /* ---------- IMAGE ---------- */
+
+  .contact-board-wrapper {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .contact-board-img {
+    width: 95%;
+    height: auto;
+    max-height: 100%;
+  }
+
+
+  /* ---------- GATES ---------- */
+
+  .gate-01 {
+    left: 10px;
+    margin-bottom: 20px;
+  }
+
+  .gate-02 {
+    right: 10px;
+    margin-bottom: 20px;
+  }
+
+
+  /* ---------- FOOTER ---------- */
+
+  .contact-board-footer {
+    margin-top: 0.25rem;
+
+    z-index: 100;
+  }
+
+  .gate-link {
+    z-index: 101;
+
+    pointer-events: auto;
+  }
+
+  .gate-label {
+    font-size: 0.75rem;
+  }
+
+  .gate-name {
+    font-size: 0.85rem;
+  }
+}
+
+.custom-cursor {
+  width: 24px;
+  height: 24px;
+
+  background: #ff00ff;
+
+  mix-blend-mode: difference;
+
+  border-radius: 50%;
+  pointer-events: none;
+
+  position: fixed;
+  z-index: 999999;
+
+  transform: translate(-50%, -50%);
+
+  transition:
+    transform 0.3s cubic-bezier(.16, 1, .3, 1);
+}
+
+.custom-cursor.is-hovering {
+  transform:
+    translate(-50%, -50%)
+    scale(2);
+    mix-blend-mode: normal;
+    background: transparent;
+    border: 0.5px solid #ffffff80;
+}
+
+/* =========================================================
+   SCAN CONTROL BUTTON (GÓC PHẢI HOME FRAME)
+   ========================================================= */
+
+.scan-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+  z-index: 20;
+  pointer-events: auto; /* Cho phép click vì wrapper cha home-frame có pointer-events: none */
+  
+  font-family: 'Stencil', sans-serif, monospace;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #ff3b30; /* Màu đỏ nổi bật */
+  
+  background: transparent;
+  border: 1px solid #ff3b30;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scan-btn:hover {
+  background: rgba(255, 59, 48, 0.15);
+  box-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
+}
+
+
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 600px) {
+  .scan-btn {
+    bottom: 16px;
+    right: 16px;
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+}
+/* 1. Ẩn con trỏ chuột mặc định trên toàn trang và các phần tử tương tác */
+html, body, *, button, a, input {
+  cursor: none !important;
+}
+
+/* 2. Định dạng cho con trỏ chuột custom */
+.custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  
+  /* BẮT BUỘC: Giúp các sự kiện click xuyên qua div này đến phần tử bên dưới */
+  pointer-events: none; 
+  
+  /* Căn giữa tâm con trỏ vào đúng vị trí tọa độ chuột */
+  transform: translate(-50%, -50%);
+  
+  /* Đảm bảo con trỏ luôn nổi trên cùng */
+  z-index: 9999;
+}
+
+iframe {
+  width: 100;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+iframe {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 2000px; /* Limits the max width so it centers on large screens */
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.cigar-tycoon-media-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.cigar-tycoon-media-container img,
+.cigar-tycoon-media-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Giúp ảnh/video lấp đầy khung mà không bị méo hình */
+  display: block;
+}
+
+iframe {
+  cursor: auto; /* Trả về con trỏ mặc định khi hover vào video */
+}
+
+.gallery-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.gallery-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hover text color */
+a:hover {
+  color: #FF00FF;
+}
+
+.artstation-link:hover {
+  color: #FF00FF;
+  opacity: 0.8;
+  text-shadow: 0 0 12px rgba(255, 0, 255, 0.8);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
